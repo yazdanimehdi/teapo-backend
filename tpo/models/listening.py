@@ -29,10 +29,10 @@ class ListeningQuestions(models.Model):
     number = models.IntegerField()
     quote = models.BooleanField(default=False)
     quote_audio_file = models.FileField(upload_to=upload_location_listening_questions, null=True, blank=True)
+    right_answer = models.CharField(max_length=50)
 
 
 class ListeningAnswers(models.Model):
     question = models.ForeignKey(to='tpo.ListeningQuestions', on_delete=models.CASCADE)
     answer = models.TextField()
     code = models.CharField(max_length=1)
-    is_correct = models.BooleanField(default=False)

@@ -1,6 +1,6 @@
 from abc import ABC
 
-from tpo.models import ListeningQuestions, ListeningAnswers
+from tpo.models import ListeningQuestions, ListeningAnswers, ListeningTimes, TestListening
 from rest_framework import serializers
 from drf_extra_fields.fields import Base64FileField
 
@@ -11,14 +11,15 @@ class ListeningAnswersSerializer(serializers.ModelSerializer):
         model = ListeningAnswers
         exclude = ['question']
 
-class ListeningQuestionSerializer(serializers.Serializer):
 
+class ListeningQuestionSerializer(serializers.Serializer):
     question = serializers.CharField()
     number = serializers.IntegerField()
     quote = serializers.BooleanField()
     listening_question_audio_file = serializers.SerializerMethodField()
     quote_audio_file = serializers.SerializerMethodField()
     answers = serializers.SerializerMethodField()
+    right_answer = serializers.CharField()
 
     def get_listening_question_audio_file(self, model):
         return 'data:audio/mpeg;base64,' + Base64FileField(represent_in_base64=True).to_representation(model.listening_question_audio_file)
@@ -38,8 +39,6 @@ class ListeningSerializer(serializers.Serializer):
     listening_image = serializers.SerializerMethodField()
     title = serializers.CharField()
     type = serializers.CharField()
-    phase = serializers.IntegerField()
-    related = serializers.CharField()
     transcript = serializers.CharField()
     questions = serializers.SerializerMethodField()
 
@@ -55,8 +54,9 @@ class ListeningSerializer(serializers.Serializer):
             model.listening_image)
 
 
+class ListeningTimesSerializer(serializers.ModelSerializer):
 
-
-
-
+    class Meta:
+        model = ListeningTimes
+        fields = '__all__'
 

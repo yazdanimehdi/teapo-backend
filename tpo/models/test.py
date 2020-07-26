@@ -18,7 +18,6 @@ class Test(models.Model):
     class_assigned = models.ForeignKey(to='institutions.Class', on_delete=models.CASCADE, blank=True, null=True)
     deadline = models.DateTimeField(blank=True, null=True)
     reading_time = models.IntegerField(blank=True, null=True)
-    is_paid = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
@@ -36,6 +35,7 @@ class WritingTimes(models.Model):
     test = models.ForeignKey(to='tpo.Test', on_delete=models.CASCADE)
     number = models.IntegerField()
     time = models.IntegerField()
+    reading_time = models.IntegerField(null=True, blank=True)
 
 
 class ListeningTimes(models.Model):
@@ -53,6 +53,7 @@ class TestListening(models.Model):
     test = models.ForeignKey(to='tpo.Test', on_delete=models.CASCADE)
     listening = models.ForeignKey(to='tpo.Listening', on_delete=models.CASCADE)
     part = models.IntegerField(default=0)
+    phase = models.IntegerField(default=0)
 
 
 class TestReading(models.Model):

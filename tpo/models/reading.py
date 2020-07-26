@@ -20,15 +20,11 @@ class ReadingQuestions(models.Model):
     related_passage = models.TextField(null=True, blank=True)
     related_passage_title = models.CharField(null=True, blank=True, max_length=400)
     question_type = models.CharField(max_length=10)
+    right_answer = models.CharField(max_length=50)
 
 
 class ReadingAnswers(models.Model):
     question = models.ForeignKey(to='tpo.ReadingQuestions', on_delete=models.CASCADE)
     answer = models.TextField()
     code = models.CharField(max_length=1)
-
-
-class ReadingQuestionCorrectAnswers(models.Model):
-    question = models.ForeignKey(to=ReadingQuestions, on_delete=models.CASCADE)
-    answer = models.ForeignKey(to=ReadingAnswers, on_delete=models.CASCADE)
 

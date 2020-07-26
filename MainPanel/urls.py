@@ -17,13 +17,15 @@ from django.conf.urls.static import static
 from MainPanel import settings
 from django.contrib import admin
 from django.urls import path
-from institutions.api.views import UserCreateAPIView
-from rest_framework.authtoken.views import ObtainAuthToken
-from tpo.api.views import TestDownloadAPIView
+from institutions.api.views import UserCreateAPIView, CurrentUserView, ObtainAPIToken
+
+from tpo.api.views import test_download_api_view, get_tpo_list
 
 urlpatterns = [
-    path('api/v1/test/', TestDownloadAPIView.as_view()),
-    path('api/v1/login/', ObtainAuthToken.as_view()),
+    path('api/v1/test/', test_download_api_view),
+    path('api/v1/login/', ObtainAPIToken.as_view()),
     path('api/v1/signup/', UserCreateAPIView.as_view()),
+    path('api/v1/tpo_list/', get_tpo_list),
+    path('api/v1/profile/', CurrentUserView.as_view()),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

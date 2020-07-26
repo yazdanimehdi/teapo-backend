@@ -128,4 +128,3 @@ for paper_id in range(1, 85):
                 new_speaking.speaking_audio_file_transcript = speaking_listening_transcript
                 new_speaking.save()
 
-# todo: add time
