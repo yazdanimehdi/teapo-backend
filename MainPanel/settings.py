@@ -96,8 +96,8 @@ WSGI_APPLICATION = 'MainPanel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'teapoir_teapo',
-        'USER': 'teapoir_admin',
+        'NAME': 'teapo',
+        'USER': 'admin',
         'PASSWORD': 'oK8FEqW!h-CI',
         'HOST': 'localhost',
         'PORT': '',

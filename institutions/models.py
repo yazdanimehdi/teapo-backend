@@ -133,7 +133,7 @@ class ClassChapterContent(models.Model):
     description = models.TextField()
     mode = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=2)
     file = models.ForeignKey(to=ClassFiles, null=True, blank=True, on_delete=models.CASCADE)
-    test = models.ForeignKey(to='tpo.Test', null=True, blank=True, on_delete=models.CASCADE)
+    # test = models.ForeignKey(to='tpo.Test', null=True, blank=True, on_delete=models.CASCADE)
     video = models.URLField(blank=True, null=True)
 
 
