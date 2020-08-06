@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'oges5w1v7d6kgv-n#)_w&3mz68b=lger99jxx&ew=l)1vwt)3u'
+PAY_API_KEY = '76625ae8-5d7d-4284-a8c3-577de7f38cab'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,10 +87,20 @@ WSGI_APPLICATION = 'MainPanel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'teapoir_teapo',
+        'USER': 'teapoir_admin',
+        'PASSWORD': 'oK8FEqW!h-CI',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 

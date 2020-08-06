@@ -5,7 +5,11 @@ from django.utils.translation import gettext_lazy as _
 
 
 def upload_location_class_files(instance, filename):
-    return f"{instance.related_class.teacher_institute.institute}/{instance.related_class.category.name}/{instance.related_class.name}/{filename}"
+    return f"{instance.related_class.teacher_institute.institute.name}/{instance.related_class.category.name}/{instance.related_class.name}/{filename}"
+
+
+def upload_location_class(instance, filename):
+    return f"{instance.category.institute.name}/{instance.category.name}/{instance.name}/class_image/{filename}"
 
 
 class UserManager(BaseUserManager):
@@ -65,7 +69,7 @@ class Users(AbstractUser):
         (INSTITUTE, 'institute'),
         (ADMIN, 'admin'),
     )
-    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=5)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=1)
 
     def __str__(self):
         return str(self.email)
@@ -81,15 +85,59 @@ class ClassCategory(models.Model):
 
 class Class(models.Model):
     name = models.TextField()
-    students = models.ManyToManyField(Users, related_name='students')
+    description = models.TextField(null=True, blank=True)
+    introductory_video = models.URLField(null=True, blank=True)
+    image = models.FileField(upload_to=upload_location_class, null=True, blank=True)
     category = models.ForeignKey(to=ClassCategory, on_delete=models.SET_NULL, null=True, blank=True)
     teacher = models.ForeignKey(to=Users, on_delete=models.SET_NULL, null=True, blank=True, related_name='teacher')
+    is_online = models.BooleanField(default=False)
+    fee = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.teacher} --------- {self.category} --------- {self.name}'
+
+
+class ClassStudent(models.Model):
+    student = models.ForeignKey(to=Users, on_delete=models.CASCADE)
+    class_inst = models.ForeignKey(to=Class, on_delete=models.CASCADE)
+    is_paid = models.BooleanField(default=False)
 
 
 class ClassFiles(models.Model):
     file = models.FileField(upload_to=upload_location_class_files)
     related_class = models.ForeignKey(to=Class, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now=True, auto_created=True)
+
+
+class ClassChapters(models.Model):
+    class_inst = models.ForeignKey(to=Class, on_delete=models.CASCADE)
+    number = models.IntegerField()
+    title = models.TextField()
+
+
+class ClassChapterContent(models.Model):
+    FILE = 1
+    VIDEO = 2
+    TEST = 3
+    ASSIGNMENT = 4
+
+    ROLE_CHOICES = (
+        (FILE, 'file'),
+        (VIDEO, 'video'),
+        (TEST, 'test'),
+        (ASSIGNMENT, 'assignment')
+    )
+    number = models.IntegerField()
+    chapter = models.ForeignKey(to=ClassChapters, on_delete=models.CASCADE)
+    title = models.TextField()
+    description = models.TextField()
+    mode = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=2)
+    file = models.ForeignKey(to=ClassFiles, null=True, blank=True, on_delete=models.CASCADE)
+    test = models.ForeignKey(to='tpo.Test', null=True, blank=True, on_delete=models.CASCADE)
+    video = models.URLField(blank=True, null=True)
+
+
+class ClassPendingPayment(models.Model):
+    model = models.ForeignKey(to=ClassStudent, on_delete=models.CASCADE)
+    token = models.CharField(max_length=20)
+    fee = models.FloatField()

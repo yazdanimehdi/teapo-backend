@@ -47,6 +47,7 @@ class ListeningTimes(models.Model):
 class TestSpeaking(models.Model):
     test = models.ForeignKey(to='tpo.Test', on_delete=models.CASCADE)
     speaking = models.ForeignKey(to='tpo.Speaking', on_delete=models.CASCADE)
+    part = models.IntegerField(default=0)
 
 
 class TestListening(models.Model):
@@ -65,3 +66,4 @@ class TestReading(models.Model):
 class TestWriting(models.Model):
     test = models.ForeignKey(to='tpo.Test', on_delete=models.CASCADE)
     writing = models.ForeignKey(to='tpo.Writing', on_delete=models.CASCADE)
+    part = models.IntegerField(default=0)

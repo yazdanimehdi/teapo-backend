@@ -22,6 +22,6 @@ for paper_id in range(1, 85):
         new_writing.writing_question = writings
         new_writing.type = 'Independent'
         new_writing.sections = 2
-        new_writing.section = 1
+        new_writing.section = 2
         new_writing.save()
 

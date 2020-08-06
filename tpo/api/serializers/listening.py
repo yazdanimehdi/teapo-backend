@@ -6,13 +6,13 @@ from drf_extra_fields.fields import Base64FileField
 
 
 class ListeningAnswersSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ListeningAnswers
-        exclude = ['question']
+        fields = '__all__'
 
 
 class ListeningQuestionSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
     question = serializers.CharField()
     number = serializers.IntegerField()
     quote = serializers.BooleanField()
@@ -33,7 +33,6 @@ class ListeningQuestionSerializer(serializers.Serializer):
 
 
 class ListeningSerializer(serializers.Serializer):
-
     id = serializers.IntegerField()
     listening = serializers.SerializerMethodField()
     listening_image = serializers.SerializerMethodField()

@@ -110,10 +110,12 @@ for (tpo, i) in tpos:
         speaking_test = TestSpeaking()
         speaking_test.test = test
         speaking_test.speaking = item
+        speaking_test.part = item.number
         speaking_test.save()
 
     for item in writing_tpo:
         writing_test = TestWriting()
         writing_test.test = test
         writing_test.writing = item
+        writing_test.part = item.section
         writing_test.save()

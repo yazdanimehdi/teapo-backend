@@ -2,12 +2,12 @@ from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from tpo.api.serializers import TestSerializer, MockListSerializer, AssignmentListSerializer, TPOListSerializer
+from tpo.api.serializers import TestSerializer
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
 from tpo.models import Test
-from tpousers.models import TestUser
+from tpousers.models import TestUser, UserTestOwnership
 from rest_framework import status
 
 
@@ -38,5 +38,11 @@ def test_download_api_view(request):
 @permission_classes((IsAuthenticated,))
 def get_tpo_list(request):
     tpo_test = Test.objects.filter(Q(mode='T') | Q(mode='P'))
-    return Response([TPOListSerializer(x).data for x in tpo_test], status=status.HTTP_200_OK)
+    my_list = []
+    for item in tpo_test:
+        tpo_test_dict = {'id': item.id, 'title': item.title, 'code': item.code, 'mode': item.mode,
+                         'paid': UserTestOwnership.objects.filter(test=item, user=request.user,
+                                                                  is_paid=True).__len__() != 0}
+        my_list.append(tpo_test_dict)
 
+    return Response(my_list, status=status.HTTP_200_OK)

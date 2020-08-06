@@ -1,9 +1,10 @@
 from rest_framework import serializers
+
 from tpo.api.serializers import WritingSerializer, ReadingSerializer, SpeakingSerializer, ListeningSerializer, \
     ListeningTimesSerializer, WritingTimesSerializer, SpeakingTimesSerializer
-from tpo.models import Speaking, Reading, Writing, Listening, Test, SpeakingTimes, ListeningTimes, WritingTimes, \
-    TestListening
-from tpousers.models import TestUser
+from tpo.models import Speaking, Reading, Writing, Listening, SpeakingTimes, ListeningTimes, WritingTimes, \
+    TestListening, TestWriting, TestSpeaking
+from tpousers.models import UserTestOwnership
 
 
 class TestSerializer(serializers.Serializer):
@@ -48,11 +49,14 @@ class TestSerializer(serializers.Serializer):
         return [WritingTimesSerializer(x).data for x in WritingTimes.objects.filter(test=model).order_by('number')]
 
     def get_speaking(self, model):
-        return [SpeakingSerializer(x).data for x in
-                Speaking.objects.filter(testspeaking__test=model).order_by('number')]
+        return [{'speaking': SpeakingSerializer(x).data,
+                 'part': TestSpeaking.objects.get(test_id=model.id, speaking_id=x.id).part}
+                for x in Speaking.objects.filter(testspeaking__test=model)]
 
     def get_writing(self, model):
-        return [WritingSerializer(x).data for x in Writing.objects.filter(testwriting__test=model)]
+        return [{'writing': WritingSerializer(x).data,
+                 'part': TestWriting.objects.get(test_id=model.id, writing_id=x.id).part
+                 } for x in Writing.objects.filter(testwriting__test=model)]
 
     def get_listening(self, model):
         try:
@@ -75,7 +79,7 @@ class TPOListSerializer(serializers.Serializer):
     paid = serializers.SerializerMethodField()
 
     def get_paid(self, model):
-        return TestUser.objects.filter(is_paid=True, test=model).__len__() != 0 if model.mode == 'P' else True
+        return UserTestOwnership.objects.filter(is_paid=True, test=model).__len__() != 0 if model.mode == 'P' else True
 
 
 class MockListSerializer(serializers.Serializer):

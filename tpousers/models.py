@@ -10,7 +10,7 @@ def upload_location_user_order_files(instance, filename):
     return f"{instance.user.username}/{instance.speaking.related}/{filename}"
 
 
-class UserStudyWords(models.Model):
+class StudyWords(models.Model):
     user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE)
     definition = models.TextField()
     correct_times = models.IntegerField()
@@ -24,8 +24,8 @@ class UserStudyWords(models.Model):
         return str(self.word)
 
 
-class UserStudyWordsExamples(models.Model):
-    word = models.ForeignKey(to=UserStudyWords, on_delete=models.CASCADE)
+class StudyWordsExamples(models.Model):
+    word = models.ForeignKey(to=StudyWords, on_delete=models.CASCADE)
     example = models.TextField()
 
     def __str__(self):
@@ -35,88 +35,29 @@ class UserStudyWordsExamples(models.Model):
 class TestUser(models.Model):
     test = models.ForeignKey(to='tpo.Test', on_delete=models.SET_NULL, null=True, blank=True)
     user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE)
-    is_paid = models.BooleanField(default=False)
+    date_time = models.DateTimeField(null=True, blank=True)
+    reading_score = models.IntegerField(null=True, blank=True)
+    listening_score = models.IntegerField(null=True, blank=True)
+    speaking_score = models.IntegerField(null=True, blank=True)
+    writing_score = models.IntegerField(null=True, blank=True)
+    is_paid = models.BooleanField(null=True, blank=True)
     is_done = models.BooleanField(default=False)
-
-
-class TestUserReading(models.Model):
-    test_user = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    comment = models.TextField(null=True, blank=True)
-    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
-    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True)
-
-
-class TestUserListening(models.Model):
-    test_user = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    comment = models.TextField(null=True, blank=True)
-    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
-    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True)
-
-
-class TestUserSpeaking(models.Model):
-    test_user = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    comment = models.TextField(null=True, blank=True)
-    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
-    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True)
-
-
-class TestUserWriting(models.Model):
-    test_user = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    comment = models.TextField(null=True, blank=True)
-    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
-    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True)
-
-
-class UserSpeakingCorrectionOrder(models.Model):
-    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='speaking_user')
-    speaking = models.ForeignKey(to='tpo.speaking', on_delete=models.SET_NULL, null=True)
-    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True,
-                                           related_name='speaking_corrector')
-
-    speaking_answer = models.FileField(upload_to=upload_location_user_order_files, null=True, blank=True)
-    score = models.IntegerField()
-    comment = models.TextField(null=True, blank=True)
-    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
-    is_paid = models.BooleanField(default=False)
-    is_done = models.BooleanField(default=False)
-
-
-class UserWritingCorrectionOrder(models.Model):
-    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='writing_user')
-    writing = models.ForeignKey(to='tpo.writing', on_delete=models.SET_NULL, null=True)
-    writing_answer = models.FileField(upload_to=upload_location_user_order_files, null=True, blank=True)
-    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True,
-                                           related_name='writing_corrector')
-    score = models.IntegerField()
-    comment = models.TextField(null=True, blank=True)
-    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
-    is_paid = models.BooleanField(default=False)
-    is_done = models.BooleanField(default=False)
+    exam_section = models.CharField(null=True, blank=True, max_length=10)
+    task_number = models.IntegerField(null=True, blank=True)
+    state_number = models.IntegerField(null=True, blank=True)
+    remaining_time = models.IntegerField(null=True, blank=True)
 
 
 class UserReadingAnswers(models.Model):
     user_test = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
     question = models.ForeignKey(to='tpo.ReadingQuestions', on_delete=models.CASCADE)
-
-
-class UserReadingAnswersAnswer(models.Model):
-    reading_answer_inst = models.ForeignKey(to=UserReadingAnswers, on_delete=models.CASCADE)
-    answer = models.ForeignKey(to='tpo.ReadingAnswers', on_delete=models.CASCADE)
+    answer = models.CharField(max_length=50, blank=True, null=True)
 
 
 class UserListeningAnswers(models.Model):
     user_test = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
     question = models.ForeignKey(to='tpo.ListeningQuestions', on_delete=models.CASCADE)
     answer = models.CharField(max_length=50, blank=True, null=True)
-
-
-class UserListeningAnswersAnswer(models.Model):
-    listening_answer_inst = models.ForeignKey(to=UserListeningAnswers, on_delete=models.CASCADE)
-    answer = models.ForeignKey(to='tpo.ListeningAnswers', on_delete=models.CASCADE)
 
 
 class UserSpeakingAnswers(models.Model):
@@ -129,3 +70,57 @@ class UserWritingAnswers(models.Model):
     user_test = models.ForeignKey(to=TestUser, on_delete=models.CASCADE)
     question = models.ForeignKey(to='tpo.Writing', on_delete=models.CASCADE)
     answer = models.TextField(blank=True, null=True)
+
+
+class UserSpeakingCorrectionOrder(models.Model):
+    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='speaking_user')
+    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True,
+                                           related_name='speaking_corrector')
+
+    speaking_answers = models.ManyToManyField(UserSpeakingAnswers)
+    score = models.IntegerField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
+    state = models.IntegerField(default=0)
+    is_paid = models.BooleanField(default=False)
+
+
+class UserWritingCorrectionOrder(models.Model):
+    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='writing_user')
+    writing_answer = models.ManyToManyField(UserWritingAnswers)
+    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True,
+                                           related_name='writing_corrector')
+    score = models.IntegerField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
+    state = models.IntegerField(default=0)
+    is_paid = models.BooleanField(default=False)
+
+
+class UserTestOwnership(models.Model):
+    test = models.ForeignKey(to='tpo.Test', on_delete=models.CASCADE)
+    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE)
+    is_paid = models.BooleanField(default=False)
+
+
+class UserTestOwnershipPendingPayment(models.Model):
+    ownership = models.ForeignKey(to=UserTestOwnership, on_delete=models.CASCADE)
+    token = models.CharField(max_length=20)
+    fee = models.FloatField()
+
+
+class SpeakingOrderPendingPayment(models.Model):
+    order = models.ForeignKey(to=UserSpeakingCorrectionOrder, on_delete=models.CASCADE)
+    token = models.CharField(max_length=20)
+    fee = models.FloatField()
+
+
+class WritingOrderPendingPayment(models.Model):
+    order = models.ForeignKey(to=UserWritingCorrectionOrder, on_delete=models.CASCADE)
+    token = models.CharField(max_length=20)
+    fee = models.FloatField()
+
+
+class GlobalVariables(models.Model):
+    key = models.CharField(max_length=100)
+    value = models.TextField()

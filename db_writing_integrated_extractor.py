@@ -47,6 +47,6 @@ for paper_id in range(1, 85):
         new_writing.writing_listening_transcript = writing_listening_transcript
         new_writing.writing_reading = writing_reading
         new_writing.sections = 4
-        new_writing.section = 2
+        new_writing.section = 1
 
         new_writing.save()

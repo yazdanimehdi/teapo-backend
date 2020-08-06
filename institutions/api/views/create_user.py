@@ -38,9 +38,7 @@ class CurrentUserView(APIView):
 
 class ObtainAPIToken(APIView):
     permission_classes = (AllowAny,)
-
     def post(self, request):
-        print('salam')
         email = request.data['email']
         password = request.data['password']
         user = authenticate(request, username=email, password=password)
