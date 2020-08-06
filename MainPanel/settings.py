@@ -26,7 +26,7 @@ PAY_API_KEY = '76625ae8-5d7d-4284-a8c3-577de7f38cab'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 CORS_ORIGIN_ALLOW_ALL = True
