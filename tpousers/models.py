@@ -3,11 +3,11 @@ from django.contrib.auth.models import AbstractUser
 
 
 def upload_location_user_test_files(instance, filename):
-    return f"{instance.test_user.user.username}/{instance.test_user.test.title}/{filename}"
+    return f"{instance.user_test.user.email}/{instance.user_test.test.title}/{filename}"
 
 
 def upload_location_user_order_files(instance, filename):
-    return f"{instance.user.username}/{instance.speaking.related}/{filename}"
+    return f"{instance.user.emails}/{instance.speaking.related}/{filename}"
 
 
 class StudyWords(models.Model):
@@ -74,6 +74,7 @@ class UserWritingAnswers(models.Model):
 
 class UserSpeakingCorrectionOrder(models.Model):
     user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='speaking_user')
+    local_user_test_id = models.IntegerField(default=0)
     assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True,
                                            related_name='speaking_corrector')
 
@@ -87,6 +88,7 @@ class UserSpeakingCorrectionOrder(models.Model):
 
 class UserWritingCorrectionOrder(models.Model):
     user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='writing_user')
+    local_user_test_id = models.IntegerField(default=0)
     writing_answer = models.ManyToManyField(UserWritingAnswers)
     assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True,
                                            related_name='writing_corrector')
@@ -109,15 +111,12 @@ class UserTestOwnershipPendingPayment(models.Model):
     fee = models.FloatField()
 
 
-class SpeakingOrderPendingPayment(models.Model):
-    order = models.ForeignKey(to=UserSpeakingCorrectionOrder, on_delete=models.CASCADE)
+class OrderPendingPayment(models.Model):
+    order_speaking = models.ForeignKey(to=UserSpeakingCorrectionOrder, on_delete=models.SET_NULL, null=True, blank=True)
+    order_writing = models.ForeignKey(to=UserWritingCorrectionOrder, on_delete=models.SET_NULL, null=True, blank=True)
     token = models.CharField(max_length=20)
-    fee = models.FloatField()
-
-
-class WritingOrderPendingPayment(models.Model):
-    order = models.ForeignKey(to=UserWritingCorrectionOrder, on_delete=models.CASCADE)
-    token = models.CharField(max_length=20)
+    transaction_id = models.CharField(max_length=20, default='-')
+    status = models.IntegerField(default=1)
     fee = models.FloatField()
 
 

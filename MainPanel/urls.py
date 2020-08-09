@@ -21,11 +21,15 @@ from institutions.api.views import UserCreateAPIView, CurrentUserView, ObtainAPI
 
 from tpo.api.views import test_download_api_view, get_tpo_list
 
+from tpousers.api.views import order_correction, correction_price
+
 urlpatterns = [
     path('api/v1/test/', test_download_api_view),
     path('api/v1/login/', ObtainAPIToken.as_view()),
     path('api/v1/signup/', UserCreateAPIView.as_view()),
     path('api/v1/tpo_list/', get_tpo_list),
     path('api/v1/profile/', CurrentUserView.as_view()),
+    path('api/v1/order_correction/', order_correction),
+    path('api/v1/prices/', correction_price),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

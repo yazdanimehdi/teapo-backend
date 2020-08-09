@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'tpousers',
     'tpo',
     'corsheaders',
+    'channels'
 
 ]
 
@@ -82,6 +83,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'MainPanel.wsgi.application'
+ASGI_APPLICATION = 'tpousers.routing.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    }
+}
+
+
 
 
 # Database
