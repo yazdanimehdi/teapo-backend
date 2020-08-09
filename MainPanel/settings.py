@@ -85,10 +85,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MainPanel.wsgi.application'
 ASGI_APPLICATION = 'tpousers.routing.application'
 
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",
+#     }
+# }
+
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    }
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+        "ROUTING": "realtime.routing.channel_routing",
+    },
 }
 
 
