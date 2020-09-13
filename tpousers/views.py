@@ -51,3 +51,5 @@ def correction_verification(request):
         else:
             return render(request, 'tpousers/transaction_result.html', {'transaction_status': False})
 
+    else:
+        return render(request, 'tpousers/transaction_result.html', {'transaction_status': False})
