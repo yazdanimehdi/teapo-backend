@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>نتیجه‌ی تراکنش</title>
+{#    <link rel="shortcut icon" href="{% static "images/favicon.ico"%}"/>#}
+
+    <!-- inject css start -->
+
+    <link href="{% static "css/theme-plugin.css"%}" rel="stylesheet"/>
+    <link href="{% static "css/theme.min.css"%}" rel="stylesheet"/>
+</head>
+<body>
+<section class="position-relative">
+    <div id="particles-js"></div>
+    <div class="container">
+        <div class="row  text-center">
+            <div class="col">
+                {% if transaction_status == True %}
+                <h1>پرداخت با موفقیت انجام گرفت</h1>
+                {% else %}
+                <h1>پرداخت انجام نگرفت</h1>
+                {% endif %}
+
+            </div>
+        </div>
+        <!-- / .row -->
+    </div>
+    <!-- / .container -->
+</section>
+
+<!--hero section end-->
+
+
+<!--body content start-->
+
+<div class="page-content">
+    {% if transaction_status == True %}
+        <section class="text-center pb-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="mb-4">از پرداخت شما سپاسگزاریم</h3>
+                        <a class="btn btn-primary" href="teapo://transaction">بازگشت به اپلیکیشن</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% else %}
+        <section class="text-center pb-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="mb-4">پرداخت شما انجام نگرفت مبلغ تا ۲۴ ساعت آینده به حساب شما باز خواهد گشت.</h3>
+                        <a class="btn btn-primary" href="teapo://transaction">بازگشت به اپلیکیشن</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+</div>
+
+<!--body content end-->
+
+<script src="{% static "js/theme-plugin.js"%}"></script>
+<script src="{% static "js/theme-script.js"%}"></script>
+
+</body>
+</html>

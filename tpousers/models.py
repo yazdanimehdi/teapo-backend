@@ -44,7 +44,8 @@ class TestUser(models.Model):
     is_done = models.BooleanField(default=False)
     exam_section = models.CharField(null=True, blank=True, max_length=10)
     task_number = models.IntegerField(null=True, blank=True)
-    state_number = models.IntegerField(null=True, blank=True)
+    section_number = models.IntegerField(null=True, blank=True)
+    question_number = models.IntegerField(null=True, blank=True)
     remaining_time = models.IntegerField(null=True, blank=True)
 
 
@@ -115,9 +116,12 @@ class OrderPendingPayment(models.Model):
     order_speaking = models.ForeignKey(to=UserSpeakingCorrectionOrder, on_delete=models.SET_NULL, null=True, blank=True)
     order_writing = models.ForeignKey(to=UserWritingCorrectionOrder, on_delete=models.SET_NULL, null=True, blank=True)
     token = models.CharField(max_length=20)
-    transaction_id = models.CharField(max_length=20, default='-')
-    status = models.IntegerField(default=1)
+    transaction_id = models.CharField(max_length=100, default='-')
+    status = models.BooleanField(default=False)
     fee = models.FloatField()
+    date = models.DateTimeField(null=True, blank=True)
+    card_no = models.CharField(max_length=20, null=True, blank=True)
+    track_id = models.CharField(max_length=100, null=True, blank=True)
 
 
 class GlobalVariables(models.Model):

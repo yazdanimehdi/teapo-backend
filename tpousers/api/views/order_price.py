@@ -6,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 
 from tpousers.models import GlobalVariables, UserWritingCorrectionOrder, UserSpeakingCorrectionOrder
 from rest_framework import status
+from tpousers.api.serializers import UserSpeakingCorrectionOrderSerializer, UserWritingCorrectionOrderSerializer
 
 
 @api_view(['GET'])
@@ -15,13 +16,10 @@ def correction_price(request):
     price_speaking = GlobalVariables.objects.get(key='SpeakingPrice').value
     price_writing = GlobalVariables.objects.get(key='WritingPrice').value
     correction_writing_order_list = UserWritingCorrectionOrder.objects.filter(user=request.user, is_paid=True)
-    writing_id_list = []
-    for item in correction_writing_order_list:
-        writing_id_list.append(item.local_user_test_id)
+    writing_list = [UserWritingCorrectionOrderSerializer(x).data for x in correction_writing_order_list]
     correction_speaking_order_list = UserSpeakingCorrectionOrder.objects.filter(user=request.user, is_paid=True)
-    speaking_id_list = []
-    for item in correction_speaking_order_list:
-        speaking_id_list.append(item.local_user_test_id)
+    speaking_list = [UserSpeakingCorrectionOrderSerializer(x).data for x in correction_speaking_order_list]
+
     return Response(data={'speaking_price': int(price_speaking), 'writing_price': int(price_writing),
-                          'writing_list': writing_id_list, 'speaking_list': speaking_id_list},
+                          'writing_list': writing_list, 'speaking_list': speaking_list},
                     status=status.HTTP_200_OK)

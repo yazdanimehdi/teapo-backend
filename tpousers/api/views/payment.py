@@ -96,7 +96,7 @@ def order_correction(request):
             writing_answers = request.data[1]
             for item in writing_answers:
                 user_writing_answer = UserWritingAnswers()
-                user_writing_answer.question = Writing.objects.get(id=item['id']),
+                user_writing_answer.question = Writing.objects.get(id=item['id'])
                 user_writing_answer.user_test = user_test
                 user_writing_answer.answer = item['answer']
                 user_writing_answer.save()
@@ -136,7 +136,7 @@ def order_correction(request):
         "name": request.user.last_name,
         "phone": request.user.phone,
         "mail": request.user.email,
-        "callback": "https://teapo.ir/verify/order"
+        "callback": "https://teapo.ir/verify/order/correction"
     }
     response = requests.post(url='https://api.idpay.ir/v1.1/payment', data=json.dumps(data), headers=headers)
 
