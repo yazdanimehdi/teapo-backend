@@ -1,14 +1,10 @@
 import json
-
 import requests
 from django.conf import settings
-from rest_framework.decorators import api_view
 from tpousers.models import OrderPendingPayment
 import datetime
-from django.shortcuts import render
 
 
-@api_view(['POST'])
 def correction_verification(request):
     status_code = request.POST.get('status')
     track_id = request.POST.get('track_id')
