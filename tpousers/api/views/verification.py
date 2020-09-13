@@ -1,8 +1,10 @@
 import json
+
 import requests
 from django.conf import settings
 from tpousers.models import OrderPendingPayment
 import datetime
+from django.shortcuts import render
 
 
 def correction_verification(request):
