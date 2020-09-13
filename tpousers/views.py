@@ -2,11 +2,14 @@ import json
 
 import requests
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+
 from tpousers.models import OrderPendingPayment
 import datetime
 from django.shortcuts import render
 
 
+@csrf_exempt
 def correction_verification(request):
     status_code = request.POST.get('status')
     track_id = request.POST.get('track_id')
