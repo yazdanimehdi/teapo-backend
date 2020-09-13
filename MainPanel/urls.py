@@ -21,7 +21,8 @@ from institutions.api.views import UserCreateAPIView, CurrentUserView, ObtainAPI
 
 from tpo.api.views import test_download_api_view, get_tpo_list
 
-from tpousers.api.views import order_correction, correction_price, correction_verification
+from tpousers.api.views import order_correction, correction_price
+from tpousers.views import correction_verification
 
 urlpatterns = [
     path('api/v1/test/', test_download_api_view),
