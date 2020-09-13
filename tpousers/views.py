@@ -23,7 +23,7 @@ def correction_verification(request):
                'X-SANDBOX': '1',
                'Content-Type': 'application/json'}
 
-    if status_code == 200:
+    if status_code == '10':
         try:
             transaction = OrderPendingPayment.objects.get(token=order_id, transaction_id=tr_id, fee=amount)
         except OrderPendingPayment.DoesNotExist:
