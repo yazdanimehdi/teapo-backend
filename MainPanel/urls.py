@@ -21,7 +21,7 @@ from institutions.api.views import UserCreateAPIView, CurrentUserView, ObtainAPI
 
 from tpo.api.views import test_download_api_view, get_tpo_list
 
-from tpousers.api.views import order_correction, correction_price
+from tpousers.api.views import order_correction, correction_price, correction_review
 from tpousers.views import correction_verification
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/v1/profile/', CurrentUserView.as_view()),
     path('api/v1/order_correction/', order_correction),
     path('api/v1/prices/', correction_price),
+    path('api/v1/correction_review', correction_review),
     path('verify/order/correction', correction_verification),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

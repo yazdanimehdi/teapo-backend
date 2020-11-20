@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 def upload_location_user_test_files(instance, filename):
-    return f"{instance.user_test.user.email}/{instance.user_test.test.title}/{filename}"
+    return f"{instance.user.email}/{instance.local_user_test_id}/{filename}"
 
 
 def upload_location_user_order_files(instance, filename):
@@ -84,6 +84,8 @@ class UserSpeakingCorrectionOrder(models.Model):
     comment = models.TextField(null=True, blank=True)
     related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
     state = models.IntegerField(default=0)
+    user_review = models.TextField(null=True, blank=True)
+    user_rating = models.IntegerField(null=True, blank=True)
     is_paid = models.BooleanField(default=False)
 
 
@@ -97,6 +99,8 @@ class UserWritingCorrectionOrder(models.Model):
     comment = models.TextField(null=True, blank=True)
     related_file = models.FileField(upload_to=upload_location_user_test_files, null=True, blank=True)
     state = models.IntegerField(default=0)
+    user_review = models.TextField(null=True, blank=True)
+    user_rating = models.IntegerField(null=True, blank=True)
     is_paid = models.BooleanField(default=False)
 
 

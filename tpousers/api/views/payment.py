@@ -58,7 +58,7 @@ def order_correction(request):
             order.save()
             for item in answers:
                 user_speaking_answer = UserSpeakingAnswers()
-                user_speaking_answer.question = Speaking.objects.get(id=item['id'])
+                user_speaking_answer.question = Speaking.objects.get(id=item['question_id'])
                 user_speaking_answer.user_test = user_test
                 string_encoded = item['answer']
                 string_encoded = re.sub(r'data:audio/webm;codecs=opus;base64,', '', string_encoded)
@@ -96,7 +96,7 @@ def order_correction(request):
             writing_answers = request.data[1]
             for item in writing_answers:
                 user_writing_answer = UserWritingAnswers()
-                user_writing_answer.question = Writing.objects.get(id=item['id'])
+                user_writing_answer.question = Writing.objects.get(id=item['question_id'])
                 user_writing_answer.user_test = user_test
                 user_writing_answer.answer = item['answer']
                 user_writing_answer.save()
