@@ -39,13 +39,13 @@ class UserWritingCorrectionOrderSerializer(serializers.Serializer):
         return [UserWritingCorrectionAnswerSerializer(x).data for x in model.writing_answer.all()]
 
     def get_assigned_corrector(self, model):
-        return str(model.assigned_corrector.first_name + model.assigned_corrector.last_name)
+        return str(model.assigned_corrector.first_name + ' ' + model.assigned_corrector.last_name)
 
     def get_test_id(self, model):
         return model.writing_answer.all()[0].user_test.test.id
 
     def get_date(self, model):
-        return int(model.writing_answer.all()[0].user_test.date_time.timestamp()) * 1000
+        return int(model.writing_answer.all()[0].user_test.date_time.timestamp() * 1000)
 
 
 class UserSpeakingCorrectionOrderSerializer(serializers.ModelSerializer):
@@ -67,10 +67,10 @@ class UserSpeakingCorrectionOrderSerializer(serializers.ModelSerializer):
         return [UserSpeakingCorrectionAnswerSerializer(x).data for x in model.speaking_answers.all()]
 
     def get_assigned_corrector(self, model):
-        return str(model.assigned_corrector.first_name + model.assigned_corrector.last_name)
+        return str(model.assigned_corrector.first_name + ' ' + model.assigned_corrector.last_name)
 
     def get_test_id(self, model):
         return model.writing_answer.all()[0].user_test.test.id
 
     def get_date(self, model):
-        return int(model.writing_answer.all()[0].user_test.date_time.timestamp()) * 1000
+        return int(model.writing_answer.all()[0].user_test.date_time.timestamp() * 1000)

@@ -34,7 +34,7 @@ class StudyWordsExamples(models.Model):
 
 class TestUser(models.Model):
     test = models.ForeignKey(to='tpo.Test', on_delete=models.SET_NULL, null=True, blank=True)
-    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE)
+    user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE, related_name='student')
     date_time = models.DateTimeField(null=True, blank=True)
     reading_score = models.IntegerField(null=True, blank=True)
     listening_score = models.IntegerField(null=True, blank=True)
@@ -47,6 +47,10 @@ class TestUser(models.Model):
     section_number = models.IntegerField(null=True, blank=True)
     question_number = models.IntegerField(null=True, blank=True)
     remaining_time = models.IntegerField(null=True, blank=True)
+    assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, related_name='corrector',
+                                           null=True, blank=True)
+    user_rate = models.IntegerField(null=True, blank=True)
+    user_comment = models.TextField(null=True, blank=True)
 
 
 class UserReadingAnswers(models.Model):
@@ -113,12 +117,28 @@ class UserTestOwnership(models.Model):
 class UserTestOwnershipPendingPayment(models.Model):
     ownership = models.ForeignKey(to=UserTestOwnership, on_delete=models.CASCADE)
     token = models.CharField(max_length=20)
+    transaction_id = models.CharField(max_length=100, default='-')
+    status = models.BooleanField(default=False)
     fee = models.FloatField()
+    date = models.DateTimeField(null=True, blank=True)
+    card_no = models.CharField(max_length=20, null=True, blank=True)
+    track_id = models.CharField(max_length=100, null=True, blank=True)
 
 
 class OrderPendingPayment(models.Model):
     order_speaking = models.ForeignKey(to=UserSpeakingCorrectionOrder, on_delete=models.SET_NULL, null=True, blank=True)
     order_writing = models.ForeignKey(to=UserWritingCorrectionOrder, on_delete=models.SET_NULL, null=True, blank=True)
+    token = models.CharField(max_length=20)
+    transaction_id = models.CharField(max_length=100, default='-')
+    status = models.BooleanField(default=False)
+    fee = models.FloatField()
+    date = models.DateTimeField(null=True, blank=True)
+    card_no = models.CharField(max_length=20, null=True, blank=True)
+    track_id = models.CharField(max_length=100, null=True, blank=True)
+
+
+class MockPendingPayment(models.Model):
+    test_user = models.ForeignKey(to='tpousers.TestUser', on_delete=models.CASCADE)
     token = models.CharField(max_length=20)
     transaction_id = models.CharField(max_length=100, default='-')
     status = models.BooleanField(default=False)

@@ -14,3 +14,6 @@ admin.site.register(Speaking)
 admin.site.register(Writing)
 admin.site.register(TestListening)
 admin.site.register(SpeakingTimes)
+admin.site.register(ListeningTimes)
+admin.site.register(WritingTimes)
+
