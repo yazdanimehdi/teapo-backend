@@ -10,6 +10,10 @@ def upload_location_user_order_files(instance, filename):
     return f"{instance.user.emails}/{instance.speaking.related}/{filename}"
 
 
+def upload_location_dictionary_files(instance, filename):
+    return f"{instance.key}/{filename}"
+
+
 class StudyWords(models.Model):
     user = models.ForeignKey(to='institutions.Users', on_delete=models.CASCADE)
     definition = models.TextField()
@@ -49,6 +53,7 @@ class TestUser(models.Model):
     remaining_time = models.IntegerField(null=True, blank=True)
     assigned_corrector = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, related_name='corrector',
                                            null=True, blank=True)
+    is_corrected = models.BooleanField(default=False)
     user_rate = models.IntegerField(null=True, blank=True)
     user_comment = models.TextField(null=True, blank=True)
 
@@ -150,4 +155,5 @@ class MockPendingPayment(models.Model):
 
 class GlobalVariables(models.Model):
     key = models.CharField(max_length=100)
-    value = models.TextField()
+    value = models.TextField(null=True, blank=True)
+    dictionary_file = models.FileField(upload_to=upload_location_dictionary_files, null=True, blank=True)

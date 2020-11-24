@@ -3,6 +3,7 @@ import os
 import random
 import re
 import string
+from datetime import datetime
 
 import requests
 import json
@@ -157,6 +158,7 @@ def order_mock(request):
     except TestUser.DoesNotExist:
         test_user = TestUser()
         test_user.user = user
+        test_user.date_time = now()
 
         try:
             test_user.test = Test.objects.get(id=test_id)

@@ -100,7 +100,7 @@ def get_user_mock_list(request):
             'listening_score': item.listening_score,
             'speaking_score': item.speaking_score,
             'writing_score': item.writing_score,
-            'fee': item.fee
+            'fee': item.test.fee
         }
         user_mock_list.append(mock_test_dict)
     return Response(user_mock_list, status=status.HTTP_200_OK)

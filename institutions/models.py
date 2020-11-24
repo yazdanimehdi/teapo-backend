@@ -62,6 +62,9 @@ class Users(AbstractUser):
     phone = models.CharField(max_length=11)
     address = models.TextField(null=True, blank=True)
     institute = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True)
+    accept_correction = models.BooleanField(default=True)
+    active_correction_limit = models.IntegerField(null=True, blank=True)
+
     ROLE_CHOICES = (
         (STUDENT, 'student'),
         (TEACHER, 'teacher'),
@@ -141,3 +144,9 @@ class ClassPendingPayment(models.Model):
     model = models.ForeignKey(to=ClassStudent, on_delete=models.CASCADE)
     token = models.CharField(max_length=20)
     fee = models.FloatField()
+
+
+class News(models.Model):
+    title = models.TextField()
+    link = models.TextField()
+    date_time = models.DateField(auto_created=True, auto_now=True)
