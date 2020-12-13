@@ -19,7 +19,9 @@ from django.contrib import admin
 from django.urls import path
 from institutions.api.views import UserCreateAPIView, CurrentUserView, ObtainAPIToken, get_news
 
-from tpo.api.views import test_download_api_view, get_tpo_list, get_mock_list, get_user_mock_list
+from tpo.api.views import test_download_api_view, get_tpo_list, get_mock_list, get_user_mock_list, \
+    get_institute_reading, add_institute_reading, delete_institute_reading, edit_institute_reading, \
+    get_institute_reading_questions, delete_institute_reading_question, add_institute_reading_question
 
 from tpousers.api.views import order_correction, correction_price, correction_review, corrector_rating, order_mock, \
     submit_speaking_answer, submit_writing_answer, submit_listening_answer, submit_reading_answer, submit_mock_done
@@ -44,6 +46,15 @@ urlpatterns = [
                   path('api/v1/submit_writing_answers/', submit_writing_answer),
                   path('api/v1/submit_mock_done/', submit_mock_done),
                   path('api/v1/get_news/', get_news),
+
+                  path('api/v1/institute/get_reading_list/', get_institute_reading),
+                  path('api/v1/institute/add_reading/', add_institute_reading),
+                  path('api/v1/institute/delete_reading/', delete_institute_reading),
+                  path('api/v1/institute/edit_reading/', edit_institute_reading),
+                  path('api/v1/institute/get_reading_questions/', get_institute_reading_questions),
+                  path('api/v1/institute/delete_reading_question/', delete_institute_reading_question),
+                  path('api/v1/institute/add_reading_question/', add_institute_reading_question),
+
                   path('verify/order/correction', correction_verification),
                   path('verify/order/mock', mock_verification),
                   path('admin/', admin.site.urls),

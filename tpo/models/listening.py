@@ -2,11 +2,11 @@ from django.db import models
 
 
 def upload_location_listening(instance, filename):
-    return f"tpo/listening/{instance.type}/{instance.title}/{filename}"
+    return f"tpo/listening/{instance.type}/{instance.id}/{filename}"
 
 
 def upload_location_listening_questions(instance, filename):
-    return f"tpo/listening/{instance.listening.type}/{instance.listening.title}/questions/{filename}"
+    return f"tpo/listening/{instance.listening.type}/{instance.listening.id}/questions/{filename}"
 
 
 class Listening(models.Model):

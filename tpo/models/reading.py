@@ -6,9 +6,10 @@ class Reading(models.Model):
     phase = models.IntegerField(blank=True, null=True)
     title = models.CharField(max_length=200, default=' ')
     passage = models.TextField()
+    institute = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.related}  {self.title}"
+        return f"{self.institute} {self.related}  {self.title}"
 
 
 class ReadingQuestions(models.Model):
