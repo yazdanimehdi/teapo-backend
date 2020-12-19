@@ -5,31 +5,34 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
-from tpo.models import TestReading, Reading, ReadingQuestions, ReadingAnswers
-from tpo.api.serializers import ReadingQuestionSerializer
+from tpo.models import TestListening, Listening, ListeningQuestions, ListeningAnswers
+from tpo.api.serializers import ListeningQuestionSerializer
 from rest_framework import status
 
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def get_reading_list(request):
+def get_listening_list(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            readings = Reading.objects.filter(Q(institute=user) | Q(institute=user.institute)).order_by('id')
-            reading_list = []
-            for reading in readings:
-                reading_obj = {}
+            listening = Listening.objects.filter(Q(institute=user) | Q(institute=user.institute)).order_by('id')
+            listening_list = []
+            for l in listening:
+                listening_obj = {}
                 tests = []
-                for item in TestReading.objects.filter(reading=reading):
+                for item in TestListening.objects.filter(listening=l):
                     tests.append(item.test.title)
-                reading_obj['title'] = reading.title
-                reading_obj['passage'] = reading.passage
-                reading_obj['tests'] = tests
-                reading_obj['id'] = reading.id
-                reading_list.append(reading_obj)
-            return Response(data=reading_list, status=status.HTTP_200_OK)
+                listening_obj['listening'] = l.listening.url
+                listening_obj['listening_image'] = l.listening_image.url
+                listening_obj['type'] = l.type
+                listening_obj['title'] = l.title
+                listening_obj['transcript'] = l.transcript
+                listening_obj['tests'] = tests
+                listening_obj['id'] = l.id
+                listening_list.append(listening_obj)
+            return Response(data=listening_list, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -40,25 +43,22 @@ def get_reading_list(request):
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def add_reading(request):
+def add_listening(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            reading = Reading()
-            reading.title = request.data['title']
-            passage = request.data['passage']
-            passage_paragraph_list = passage.split('\n')
-            reading_passage = ''
-            i = 1
-            for item in passage_paragraph_list:
-                reading_passage += f'<p id="{i}">' + item + '</p>'
-                i += 1
-            reading.passage = reading_passage
+            listening = Listening()
+            listening.listening = request.FILES['listening']
+            listening.listening_image = request.FILES['listening_image']
+            listening.type = request.data['type']
+            listening.title = request.data['title']
+            listening.transcript = request.data['transcript']
+
             if user.role == 4:
-                reading.institute = user
+                listening.institute = user
             else:
-                reading.institute = user.institute
-            reading.save()
+                listening.institute = user.institute
+            listening.save()
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -70,16 +70,16 @@ def add_reading(request):
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def delete_reading(request):
+def delete_listening(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            reading = Reading.objects.get(Q(id=request.data['id']) & (Q(institute=user) | Q(institute=user.institute)))
-            reading.delete()
+            listening = Listening.objects.get(Q(id=request.data['id']) & (Q(institute=user) | Q(institute=user.institute)))
+            listening.delete()
             return Response(status=status.HTTP_200_OK)
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        except Reading.DoesNotExist:
+        except Listening.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
@@ -91,25 +91,23 @@ def delete_reading(request):
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def edit_reading(request):
+def edit_listening(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            reading = Reading.objects.get(Q(id=request.data['id']) & (Q(institute=user) | Q(institute=user.institute)))
-            reading.title = request.data['title']
-            passage = request.data['passage']
-            passage_paragraph_list = passage.split('\n')
-            reading_passage = ''
-            i = 1
-            for item in passage_paragraph_list:
-                reading_passage += f'<p id="{i}">' + item + '</p>'
-                i += 1
-            reading.passage = reading_passage
-            reading.save()
+            listening = Listening.objects.get(Q(id=request.data['id']) & (Q(institute=user) | Q(institute=user.institute)))
+            if request.FILES['listening']:
+                listening.listening = request.FILES['listening']
+            if request.FILES['listening_image']:
+                listening.listening_image = request.FILES['listening_image']
+            listening.type = request.data['type']
+            listening.title = request.data['title']
+            listening.transcript = request.data['transcript']
+            listening.save()
             return Response(status=status.HTTP_200_OK)
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        except Reading.DoesNotExist:
+        except Listening.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
@@ -121,19 +119,19 @@ def edit_reading(request):
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def get_reading_questions(request):
+def get_listening_questions(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            reading = Reading.objects.get(
+            listening = Listening.objects.get(
                 Q(id=request.GET.get('id')) & (Q(institute=user) | Q(institute=user.institute)))
             return Response(
-                data=[ReadingQuestionSerializer(q).data for q in
-                      ReadingQuestions.objects.filter(reading=reading).order_by('-number')],
+                data=[ListeningQuestionSerializer(q).data for q in
+                      ListeningQuestions.objects.filter(listening=listening).order_by('-number')],
                 status=status.HTTP_200_OK)
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        except Reading.DoesNotExist:
+        except Listening.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
@@ -145,15 +143,15 @@ def get_reading_questions(request):
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def delete_reading_question(request):
+def delete_listening_question(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            question = ReadingQuestions.objects.get(
-                Q(id=request.data['id']) & (Q(reading__institute=user) | Q(reading__institute=user.institute)))
+            question = ListeningQuestions.objects.get(
+                Q(id=request.data['id']) & (Q(listening__institute=user) | Q(listening__institute=user.institute)))
             question.delete()
             return Response(status=status.HTTP_200_OK)
-        except ReadingQuestions.DoesNotExist:
+        except ListeningQuestions.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)
@@ -165,7 +163,7 @@ def delete_reading_question(request):
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication, SessionAuthentication))
 @permission_classes((IsAuthenticated,))
-def add_reading_question(request):
+def add_listening_question(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
