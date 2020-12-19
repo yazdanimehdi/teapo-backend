@@ -9,7 +9,7 @@ class Reading(models.Model):
     institute = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.related}  {self.title}"
+        return f"{self.institute} {self.related}  {self.title}"
 
 
 class ReadingQuestions(models.Model):
