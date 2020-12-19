@@ -11,6 +11,10 @@ import datetime
 from django.shortcuts import render, Http404
 
 
+def get_panel(request):
+    return render(request, 'tpousers/panel.html')
+
+
 @csrf_exempt
 def correction_verification(request):
     if request.META.get('HTTP_ORIGIN') == 'https://idpay.ir' and request.method == 'POST':
@@ -146,3 +150,5 @@ def mock_verification(request):
             return render(request, 'tpousers/transaction_result.html', {'transaction_status': False})
     else:
         return Http404
+
+

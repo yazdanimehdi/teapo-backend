@@ -19,13 +19,14 @@ from django.contrib import admin
 from django.urls import path
 from institutions.api.views import UserCreateAPIView, CurrentUserView, ObtainAPIToken, get_news
 
-from tpo.api.views import test_download_api_view, get_tpo_list, get_mock_list, get_user_mock_list
+from tpo.api.views import *
 
-from tpousers.api.views import order_correction, correction_price, correction_review, corrector_rating, order_mock, \
-    submit_speaking_answer, submit_writing_answer, submit_listening_answer, submit_reading_answer, submit_mock_done
-from tpousers.views import correction_verification, mock_verification
+from tpousers.api.views import *
+from tpousers.views import correction_verification, mock_verification, get_panel
 
 urlpatterns = [
+                  path('', get_panel),
+
                   path('api/v1/test/', test_download_api_view),
                   path('api/v1/login/', ObtainAPIToken.as_view()),
                   path('api/v1/signup/', UserCreateAPIView.as_view()),
@@ -44,7 +45,17 @@ urlpatterns = [
                   path('api/v1/submit_writing_answers/', submit_writing_answer),
                   path('api/v1/submit_mock_done/', submit_mock_done),
                   path('api/v1/get_news/', get_news),
+
                   path('verify/order/correction', correction_verification),
                   path('verify/order/mock', mock_verification),
+
+                  path('api/v1/institute/get_reading_list/', get_reading_list),
+                  path('api/v1/institute/add_reading/', add_reading),
+                  path('api/v1/institute/delete_reading/', delete_reading),
+                  path('api/v1/institute/edit_reading/', edit_reading),
+                  path('api/v1/institute/get_reading_questions/', get_reading_questions),
+                  path('api/v1/institute/delete_reading_question/', delete_reading_question),
+                  path('api/v1/institute/add_reading_question/', add_reading_question),
+
                   path('admin/', admin.site.urls),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

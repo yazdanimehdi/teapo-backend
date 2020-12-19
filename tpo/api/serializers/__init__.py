@@ -1,4 +1,4 @@
-from .reading import ReadingSerializer
+from .reading import ReadingSerializer, ReadingQuestionSerializer
 from .writing import WritingSerializer, WritingTimesSerializer
 from .listening import ListeningSerializer, ListeningTimesSerializer
 from .speaking import SpeakingSerializer, SpeakingTimesSerializer

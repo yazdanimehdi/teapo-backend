@@ -2,11 +2,11 @@ from django.db import models
 
 
 def upload_location_listening(instance, filename):
-    return f"tpo/listening/{instance.type}/{instance.title}/{filename}"
+    return f"tpo/listening/{instance.type}/{instance.id}/{filename}"
 
 
 def upload_location_listening_questions(instance, filename):
-    return f"tpo/listening/{instance.listening.type}/{instance.listening.title}/questions/{filename}"
+    return f"tpo/listening/{instance.listening.type}/{instance.listening.id}/questions/{filename}"
 
 
 class Listening(models.Model):
@@ -17,6 +17,8 @@ class Listening(models.Model):
     phase = models.IntegerField(blank=True, null=True)
     related = models.CharField(max_length=500, blank=True, null=True)
     transcript = models.TextField(blank=True, null=True)
+    institute = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True)
+
 
     def __str__(self):
         return f"{str(self.related)} {self.type} {self.title}"
