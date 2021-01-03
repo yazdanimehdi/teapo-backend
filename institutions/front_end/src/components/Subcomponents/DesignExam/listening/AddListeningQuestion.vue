@@ -8,7 +8,7 @@
                style="margin: 0;position: fixed; z-index: 10; font-family: Kalam">
       <div style="font-weight: bold; font-size: 20px">Listening</div>
       <v-spacer></v-spacer>
-      <v-btn icon to="/reading">
+      <v-btn icon to="/questions_listening">
         <v-icon>{{ icons.mdiChevronRight }}</v-icon>
       </v-btn>
       <v-progress-linear
@@ -62,6 +62,18 @@
         >
         </v-text-field>
 
+        <v-container
+            class="px-0"
+            fluid
+        >
+          <v-checkbox
+              v-model="isQuoted"
+              label="Is the Question Have Quote?"
+              :on-icon="icons.mdiCheckboxMarkedCircleOutline"
+              :off-icon="icons.mdiCheckboxBlankCircleOutline"
+          ></v-checkbox>
+        </v-container>
+
         <v-file-input
             label="Question Audio File"
             outlined
@@ -73,6 +85,7 @@
         <v-file-input
             label="Quote Audio File"
             outlined
+            v-if="isQuoted"
             @change="saveFileQuote($event)"
             :rules="[v => !!v || 'بارگذاری فایل شینداری نقل قول ضروری می‌باشد']"
             :prepend-icon="icons.mdiFile"
@@ -123,8 +136,8 @@
             shaped
             color="success"
             style="font-weight: bold; font-size: 20px; margin-bottom: 90px"
-            @click="savePassage"
-            :disabled="sending || !valid"
+            @click="saveQuestion"
+            :disabled="sending || !valid || correctAnswers.length === 0"
         >
           Save
         </v-btn>
@@ -138,7 +151,7 @@
       <v-btn color="success" style="font-family: dana; font-weight: bold; letter-spacing: 0" @click="resetAll">
         اضافه کردن سوال جدید
       </v-btn>
-      <v-btn color="error" style="font-family: dana; font-weight: bold; letter-spacing: 0" to="/listening">
+      <v-btn color="error" style="font-family: dana; font-weight: bold; letter-spacing: 0" to="/questions_listening">
         بازگشت به صفحه‌ی سوالات
       </v-btn>
     </v-dialog>
@@ -153,7 +166,7 @@ import {
   mdiCheckboxMarkedCircleOutline
 } from '@mdi/js';
 import {mapGetters} from 'vuex';
-import {ADD_NEW_LISTENING} from "@/store/actions/listening";
+import {ADD_NEW_LISTENING_QUESTION} from "@/store/actions/listening";
 
 export default {
   name: "AddListeningQuestion",
@@ -161,9 +174,8 @@ export default {
     return {
       width: 0,
       height: 0,
-      page: 1,
+      isQuoted: false,
       valid: false,
-      listeningType: 'Conversation',
       question: '',
       questionNumber: '',
       correctAnswers: [],
@@ -195,31 +207,41 @@ export default {
       this.width = window.innerWidth;
       this.height = window.innerHeight;
     },
-    savePassage() {
+    saveQuestion() {
       this.sending = true
       let bodyFormData = new FormData();
+      let rightAnswers = ''
+      for (let i = 0; i < this.correctAnswers.length; i++) {
+        rightAnswers = this.correctAnswers[i] + ' '
+      }
       bodyFormData.set('listening_id', this.listeningSelected.id);
-      bodyFormData.set('question', this.title);
-      bodyFormData.set('number', this.listeningType);
-      bodyFormData.set('quote', this.transcript);
-      // bodyFormData.set('right_answer', this.);
+      bodyFormData.set('question', this.question);
+      bodyFormData.set('number', this.questionNumber);
+      bodyFormData.set('quote', this.isQuoted);
+      bodyFormData.set('right_answer', rightAnswers);
+      bodyFormData.set('answers', JSON.stringify(this.choices))
 
+      bodyFormData.append('listening_question_audio_file', this.questionFile);
+      if (this.isQuoted) {
+        bodyFormData.append('quote_audio_file', this.quoteFile);
+      }
 
-      bodyFormData.append('listening_question_audio_file', this.listeningFile);
-      bodyFormData.append('quote_audio_file', this.listeningPicture);
-
-      this.$store.dispatch(ADD_NEW_LISTENING, bodyFormData).then(() => {
+      this.$store.dispatch(ADD_NEW_LISTENING_QUESTION, bodyFormData).then(() => {
         this.sending = false;
         this.dialog = true
       })
     },
     resetAll() {
-      this.transcript = '';
-      this.title = '';
+      this.isQuoted = false;
+      this.valid = false;
+      this.question = '';
+      this.questionNumber = '';
+      this.correctAnswers = [];
+      this.choices = ['', ''];
+      this.questionFile = null;
+      this.quoteFile = null;
       this.dialog = false;
-      this.listeningType = 'Conversation';
-      this.listeningFile = null;
-      this.listeningPicture = null;
+      this.sending = false;
     },
     saveFileQuestion(event) {
       this.questionFile = event

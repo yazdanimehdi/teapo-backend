@@ -8,6 +8,7 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from tpo.models import TestListening, Listening, ListeningQuestions, ListeningAnswers
 from tpo.api.serializers import ListeningQuestionSerializer
 from rest_framework import status
+import json
 
 
 @api_view(['GET'])
@@ -167,33 +168,35 @@ def add_listening_question(request):
     user = request.user
     if user.role == 4 or user.role == 2:
         try:
-            reading = Reading.objects.get(
-                Q(id=request.data['reading_id']) & (Q(institute=user) | Q(institute=user.institute)))
-            question = ReadingQuestions()
-            question.reading = reading
+            listening = Listening.objects.get(
+                Q(id=request.data['listening_id']) & (Q(institute=user) | Q(institute=user.institute)))
+            question = ListeningQuestions()
+            question.listening = listening
             question.question = request.data['question']
-            question.question_type = request.data['question_type']
             question.number = request.data['number']
-            question.related_paragraph = request.data['related_paragraph']
-            question.related_passage = request.data['related_passage']
+            question.listening_question_audio_file = request.FILES['listening_question_audio_file']
+            if request.data['quote'] == 'false':
+                question.quote = False
+            if request.data['quote'] == 'true':
+                question.quote = True
+
             question.right_answer = request.data['right_answer'].strip()
 
-            if question.question_type == 'Insertion':
-                question.insertion_sentence = request.data['insertion_sentence']
+            if question.quote is True:
+                question.quote_audio_file = request.FILES['quote_audio_file']
 
             question.save()
-            if question.question_type != 'Insertion':
-                for index, choice in enumerate(request.data['answers']):
-                    answer = ReadingAnswers()
-                    answer.question = question
-                    answer.answer = choice
-                    answer.code = index + 1
-                    answer.save()
+            for index, choice in enumerate(json.loads(request.data['answers'])):
+                answer = ListeningAnswers()
+                answer.question = question
+                answer.answer = choice
+                answer.code = index + 1
+                answer.save()
 
             return Response(status=status.HTTP_200_OK)
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        except Reading.DoesNotExist:
+        except Listening.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             print(e)

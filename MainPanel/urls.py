@@ -64,7 +64,7 @@ urlpatterns = [
                   path('api/v1/institute/edit_listening/', edit_listening),
                   path('api/v1/institute/get_listening_questions/', get_listening_questions),
                   path('api/v1/institute/delete_listening_question/', delete_listening_question),
-                  # path('api/v1/institute/add_reading_question/', add_reading_question),
+                  path('api/v1/institute/add_listening_question/', add_listening_question),
 
                   path('admin/', admin.site.urls),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
