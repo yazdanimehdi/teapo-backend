@@ -57,7 +57,6 @@ urlpatterns = [
                   path('api/v1/institute/delete_reading_question/', delete_reading_question),
                   path('api/v1/institute/add_reading_question/', add_reading_question),
 
-
                   path('api/v1/institute/get_listening_list/', get_listening_list),
                   path('api/v1/institute/add_listening/', add_listening),
                   path('api/v1/institute/delete_listening/', delete_listening),
@@ -65,6 +64,11 @@ urlpatterns = [
                   path('api/v1/institute/get_listening_questions/', get_listening_questions),
                   path('api/v1/institute/delete_listening_question/', delete_listening_question),
                   path('api/v1/institute/add_listening_question/', add_listening_question),
+
+                  path('api/v1/institute/get_speaking_list/', get_speaking_list),
+                  # path('api/v1/institute/add_speaking/', add_speaking),
+                  path('api/v1/institute/delete_speaking/', delete_speaking),
+                  # path('api/v1/institute/edit_speaking/', edit_speaking),
 
                   path('admin/', admin.site.urls),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

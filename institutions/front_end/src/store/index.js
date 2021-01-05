@@ -5,6 +5,7 @@ import reading from "@/store/modules/reading";
 import auth from "@/store/modules/auth";
 import user from "@/store/modules/user";
 import listening from "@/store/modules/listening";
+import speaking from "@/store/modules/speaking";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
         dashboard: dashboard,
         reading: reading,
         listening: listening,
+        speaking: speaking,
         auth: auth,
         user: user,
 

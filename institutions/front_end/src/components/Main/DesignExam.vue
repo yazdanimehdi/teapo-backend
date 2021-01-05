@@ -84,6 +84,7 @@
             <v-card-actions style="margin-top: 20px">
               <v-btn
                   color="orange lighten-2"
+                  to="/speaking"
 
               >
                 Speaking
@@ -114,7 +115,7 @@
             <v-card-actions style="margin-top: 20px">
               <v-btn
                   color="orange lighten-2"
-
+                  to="/writing"
               >
                 Writing
               </v-btn>

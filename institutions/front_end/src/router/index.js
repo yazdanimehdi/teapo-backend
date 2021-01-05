@@ -62,6 +62,36 @@ const routes = [
         component: () => import('@/components/Subcomponents/DesignExam/listening/AddListeningQuestion')
     },
     {
+        path: '/speaking',
+        name: 'Speaking',
+        component: () => import('@/components/Subcomponents/DesignExam/speaking/SpeakingBase')
+    },
+    // {
+    //     path: '/add_speaking',
+    //     name: 'AddSpeaking',
+    //     component: () => import('@/components/Subcomponents/DesignExam/speaking/AddSpeaking')
+    // },
+    // {
+    //     path: '/edit_speaking',
+    //     name: 'EditSpeaking',
+    //     component: () => import('@/components/Subcomponents/DesignExam/speaking/EditSpeaking')
+    // },
+    {
+        path: '/writing',
+        name: 'Writing',
+        component: () => import('@/components/Subcomponents/DesignExam/writing/WritingBase')
+    },
+    // {
+    //     path: '/add_writing',
+    //     name: 'AddWriting',
+    //     component: () => import('@/components/Subcomponents/DesignExam/writing/AddWriting')
+    // },
+    // {
+    //     path: '/edit_writing',
+    //     name: 'EditWriting',
+    //     component: () => import('@/components/Subcomponents/DesignExam/writing/EditWriting')
+    // },
+    {
         path: '/login',
         name: 'Login',
         component: RegisterLogin

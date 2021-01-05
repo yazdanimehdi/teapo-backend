@@ -18,6 +18,7 @@ class Speaking(models.Model):
     number = models.IntegerField()
     speaking_audio_file_transcript = models.TextField(blank=True, null=True)
     sections = models.IntegerField(blank=True, null=True)
+    institute = models.ForeignKey(to='institutions.Users', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.related} {self.number} {self.speaking_question}"
